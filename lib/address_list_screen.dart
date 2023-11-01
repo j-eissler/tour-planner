@@ -11,6 +11,10 @@ class AddressListScreen extends StatelessWidget {
           title: const Text("Address List")),
       body: const Center(
           child: Text("This screen shows all the addresses in the database")),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () => Navigator.pushNamed(context, '/address_form'),
+      ),
     );
   }
 }
