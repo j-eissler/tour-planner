@@ -17,6 +17,23 @@ class _MapScreenState extends State<MapScreen> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text("Map"),
       ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.inversePrimary),
+                child: Text("Menu",
+                    style: Theme.of(context).textTheme.headlineLarge)),
+            const ListTile(leading: Icon(Icons.map), title: Text("Map")),
+            const ListTile(
+              leading: Icon(Icons.view_list),
+              title: Text("Address List"),
+            ),
+            // TODO: Add AboutListTile
+          ],
+        ),
+      ),
       body: FlutterMap(
           options: const MapOptions(
             initialCenter: LatLng(50.775555, 6.083611),
