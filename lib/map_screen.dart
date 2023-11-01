@@ -26,9 +26,10 @@ class _MapScreenState extends State<MapScreen> {
                 child: Text("Menu",
                     style: Theme.of(context).textTheme.headlineLarge)),
             const ListTile(leading: Icon(Icons.map), title: Text("Map")),
-            const ListTile(
-              leading: Icon(Icons.view_list),
-              title: Text("Address List"),
+            ListTile(
+              leading: const Icon(Icons.view_list),
+              title: const Text("Address List"),
+              onTap: () => Navigator.pushNamed(context, '/address_list'),
             ),
             // TODO: Add AboutListTile
           ],
