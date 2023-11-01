@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tour_planner/address_form_screen.dart';
-import 'package:tour_planner/address_list_screen.dart';
+import 'package:tour_planner/waypoint_form_screen.dart';
+import 'package:tour_planner/waypoint_list_screen.dart';
 import 'package:tour_planner/map_screen.dart';
 
 void main() {
@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
       initialRoute: '/map',
       routes: {
         '/map': (context) => const MapScreen(),
-        '/address_list': (context) => const AddressListScreen(),
-        '/address_form': (context) => const AddressFormScreen()
+        '/waypoints_list': (context) => const WaypointsListScreen(),
+        '/waypoint_form': (context) => const WaypointFormScreen()
       },
     );
   }

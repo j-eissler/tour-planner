@@ -27,8 +27,8 @@ class _MapScreenState extends State<MapScreen> {
                     style: Theme.of(context).textTheme.headlineLarge)),
             ListTile(
               leading: const Icon(Icons.view_list),
-              title: const Text("Address List"),
-              onTap: () => Navigator.pushNamed(context, '/address_list'),
+              title: const Text("Waypoints"),
+              onTap: () => Navigator.pushNamed(context, '/waypoints_list'),
             ),
             // TODO: Add AboutListTile
           ],
