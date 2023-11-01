@@ -25,7 +25,6 @@ class _MapScreenState extends State<MapScreen> {
                     color: Theme.of(context).colorScheme.inversePrimary),
                 child: Text("Menu",
                     style: Theme.of(context).textTheme.headlineLarge)),
-            const ListTile(leading: Icon(Icons.map), title: Text("Map")),
             ListTile(
               leading: const Icon(Icons.view_list),
               title: const Text("Address List"),
