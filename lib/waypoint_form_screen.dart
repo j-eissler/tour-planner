@@ -53,6 +53,8 @@ class _WaypointFormScreenState extends State<WaypointFormScreen> {
                   }
                   final db = TourPlannerDatabase();
                   db.addWaypoint(Waypoint(address: _address, city: _city));
+
+                  Navigator.of(context).pop();
                 },
                 child: const Text('Submit')),
           ],
