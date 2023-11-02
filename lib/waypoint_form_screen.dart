@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:tour_planner/database.dart';
 import 'package:tour_planner/waypoint_model.dart';
+import 'package:http/http.dart' as http;
 
 class WaypointFormScreen extends StatefulWidget {
   const WaypointFormScreen({super.key});
@@ -45,21 +49,52 @@ class _WaypointFormScreenState extends State<WaypointFormScreen> {
                   return null;
                 }),
             ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Processing data')),
                     );
                   }
-                  final db = TourPlannerDatabase();
-                  db.addWaypoint(Waypoint(address: _address, city: _city));
 
-                  Navigator.of(context).pop();
+                  final coords = await getCoordinates(_address, _city);
+
+                  final db = TourPlannerDatabase();
+                  db.addWaypoint(Waypoint(
+                      address: _address,
+                      city: _city,
+                      lat: coords?.latitude,
+                      long: coords?.longitude));
+
+                  // Because this function is async, we need to check if the widget is still mounted.
+                  // We need to avoid popping a navigator route when the widget doesn't exist anymore.
+                  if (mounted) {
+                    Navigator.of(context).pop();
+                  }
                 },
                 child: const Text('Submit')),
           ],
         ),
       ),
     );
+  }
+
+  Future<LatLng?> getCoordinates(String address, String city) async {
+    final response = await http.get(Uri.parse(
+        'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=$address,$city'));
+
+    if (response.statusCode == 200) {
+      try {
+        final json = jsonDecode(response.body);
+        final lat = double.parse(json[0]['lat']);
+        final long = double.parse(json[0]['lon']);
+        return LatLng(lat, long);
+      } catch (e) {
+        print('Error: failed to get lat,lon from response');
+      }
+    } else {
+      throw Exception('Failed to get coordinates');
+    }
+
+    return null;
   }
 }
