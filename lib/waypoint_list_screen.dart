@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:tour_planner/database.dart';
+import 'package:tour_planner/waypoint_model.dart';
 
-class WaypointsListScreen extends StatelessWidget {
+class WaypointsListScreen extends StatefulWidget {
   const WaypointsListScreen({super.key});
+
+  @override
+  State<WaypointsListScreen> createState() => _WaypointsListScreenState();
+}
+
+class _WaypointsListScreenState extends State<WaypointsListScreen> {
+  List<Waypoint> waypoints = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadWaypoints();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -9,12 +24,26 @@ class WaypointsListScreen extends StatelessWidget {
       appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Waypoints")),
-      body: const Center(
-          child: Text("This screen shows all the waypoints in the database")),
+      body: ListView.builder(
+          itemCount: waypoints.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(waypoints[index].address),
+            );
+          }),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () => Navigator.pushNamed(context, '/waypoint_form'),
       ),
     );
+  }
+
+  void loadWaypoints() async {
+    final db = TourPlannerDatabase();
+    var wps = await db.getAllWaypoints();
+
+    setState(() {
+      waypoints = wps;
+    });
   }
 }
