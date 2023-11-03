@@ -40,6 +40,8 @@ class _MapScreenState extends State<MapScreen> {
       ),
       drawer: Drawer(
         child: ListView(
+          // Remove white area behind status bar above the header
+          padding: const EdgeInsets.all(0.0),
           children: [
             DrawerHeader(
                 decoration: BoxDecoration(
