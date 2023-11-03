@@ -87,10 +87,15 @@ class _MapScreenState extends State<MapScreen> {
             alignment: Alignment.topCenter,
             child: Container(
               margin: const EdgeInsets.all(15),
-              padding: const EdgeInsets.only(left: 12, right: 12),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(8)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black45,
+                    blurRadius: 6.0,
+                  ),
+                ],
               ),
               child: TextField(
                 controller: addressTextFieldController,
@@ -99,10 +104,11 @@ class _MapScreenState extends State<MapScreen> {
                   hintText: 'Search address',
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
+                  contentPadding: EdgeInsets.all(12.0),
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
       floatingActionButton: Column(
