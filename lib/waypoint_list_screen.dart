@@ -29,6 +29,14 @@ class _WaypointsListScreenState extends State<WaypointsListScreen> {
           itemBuilder: (context, index) {
             return ListTile(
               title: Text(waypoints[index].address),
+              trailing: ElevatedButton(
+                child: const Icon(Icons.delete),
+                onPressed: () async {
+                  final db = TourPlannerDatabase();
+                  await db.deleteWaypoint(waypoints[index].id);
+                  loadWaypoints();
+                },
+              ),
             );
           }),
       floatingActionButton: FloatingActionButton(

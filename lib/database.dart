@@ -52,4 +52,12 @@ class TourPlannerDatabase {
 
     return [];
   }
+
+  Future<int> deleteWaypoint(int? id) async {
+    if(id == null) return 0;
+
+    final db = await _getDb();
+
+    return db.delete('waypoints', where: 'id = ?', whereArgs: [id]);
+  }
 }
