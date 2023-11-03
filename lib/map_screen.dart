@@ -234,6 +234,8 @@ class _MapScreenState extends State<MapScreen> {
     addressTextFieldController.clear();
 
     _showSnackBar('Waypoint added');
+
+    mapController.move(coords, initalZoom);
   }
 
   void _showSnackBar(String message) {
