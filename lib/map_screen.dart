@@ -13,6 +13,9 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  final mapController = MapController();
+  final initalPosition = const LatLng(50.775555, 6.083611);
+  final initalZoom = 13.0;
   List<Marker> _markers = [];
 
   @override
@@ -46,15 +49,18 @@ class _MapScreenState extends State<MapScreen> {
                 loadMarkers();
               },
             ),
+            // TODO: Add settings menu. Settings: marker color, marker size
             // TODO: Add AboutListTile
           ],
         ),
       ),
       body: FlutterMap(
-          options: const MapOptions(
-            initialCenter: LatLng(50.775555, 6.083611),
+          mapController: mapController,
+          options: MapOptions(
+            initialCenter: initalPosition,
             initialRotation: 0,
-            interactionOptions: InteractionOptions(
+            initialZoom: initalZoom,
+            interactionOptions: const InteractionOptions(
                 flags: InteractiveFlag.all & ~InteractiveFlag.rotate),
           ),
           children: [
@@ -68,6 +74,28 @@ class _MapScreenState extends State<MapScreen> {
               alignment: Alignment.topCenter,
             ),
           ]),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            child: const Icon(Icons.gps_fixed),
+            onPressed: () async {
+              await requestLocationPermissions();
+              final pos = await Geolocator.getCurrentPosition();
+              setState(() {
+                mapController.move(
+                    LatLng(pos.latitude, pos.longitude), initalZoom);
+              });
+            },
+          ),
+          const SizedBox(
+            width: 10,
+            height: 10,
+          ),
+          FloatingActionButton(
+              child: const Icon(Icons.add), onPressed: () => {}),
+        ],
+      ),
     );
   }
 
@@ -98,7 +126,7 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  void requestLocationPermissions() async {
+  Future<void> requestLocationPermissions() async {
     bool serviceEnabled;
     LocationPermission permission;
 
