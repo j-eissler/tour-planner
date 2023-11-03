@@ -87,13 +87,17 @@ class _MapScreenState extends State<MapScreen> {
                     LatLng(pos.latitude, pos.longitude), initalZoom);
               });
             },
+            heroTag: 'fab1', // heroTag must be unique
           ),
           const SizedBox(
             width: 10,
             height: 10,
           ),
           FloatingActionButton(
-              child: const Icon(Icons.add), onPressed: () => {}),
+            onPressed: () => {},
+            heroTag: 'fab2',
+            child: const Icon(Icons.add),
+          ),
         ],
       ),
     );
