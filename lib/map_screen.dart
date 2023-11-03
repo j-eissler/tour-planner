@@ -218,8 +218,7 @@ class _MapScreenState extends State<MapScreen> {
 
     final coords = await _getCoordinates(input);
     if (coords == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Address not found')));
+      _showSnackBar('Address not found');
       return;
     }
 
@@ -233,5 +232,12 @@ class _MapScreenState extends State<MapScreen> {
     loadMarkers();
 
     addressTextFieldController.clear();
+
+    _showSnackBar('Waypoint added');
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 }
