@@ -108,6 +108,27 @@ class _MapScreenState extends State<MapScreen> {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          // Show all waypoints
+          FloatingActionButton(
+            onPressed: () {
+              List<LatLng> points = [];
+              for (var e in _markers) {
+                points.add(e.point);
+              }
+              final bounds = LatLngBounds.fromPoints(points);
+              mapController.fitCamera(CameraFit.bounds(bounds: bounds));
+              // Zoom out a little bit to avoid having the outer markers exactly at the edge of the screen
+              mapController.move(
+                  mapController.camera.center, mapController.camera.zoom - 0.5);
+            },
+            heroTag: 'fab2',
+            child: const Icon(Icons.fullscreen),
+          ),
+          const SizedBox(
+            width: 10,
+            height: 15,
+          ),
+          // Center on location
           FloatingActionButton(
             child: const Icon(Icons.gps_fixed),
             onPressed: () async {
@@ -119,10 +140,6 @@ class _MapScreenState extends State<MapScreen> {
               });
             },
             heroTag: 'fab1', // heroTag must be unique
-          ),
-          const SizedBox(
-            width: 10,
-            height: 58,
           ),
         ],
       ),
