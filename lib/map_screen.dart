@@ -84,7 +84,7 @@ class _MapScreenState extends State<MapScreen> {
               ]),
           // Address search field
           Align(
-            alignment: Alignment.bottomCenter,
+            alignment: Alignment.topCenter,
             child: Container(
               margin: const EdgeInsets.all(15),
               padding: const EdgeInsets.only(left: 12, right: 12),
