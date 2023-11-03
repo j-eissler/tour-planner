@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:tour_planner/database.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
+import 'package:tour_planner/waypoint_model.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -17,6 +21,8 @@ class _MapScreenState extends State<MapScreen> {
   final initalPosition = const LatLng(50.775555, 6.083611);
   final initalZoom = 13.0;
   List<Marker> _markers = [];
+
+  final addressTextFieldController = TextEditingController();
 
   @override
   void initState() {
@@ -54,26 +60,51 @@ class _MapScreenState extends State<MapScreen> {
           ],
         ),
       ),
-      body: FlutterMap(
-          mapController: mapController,
-          options: MapOptions(
-            initialCenter: initalPosition,
-            initialRotation: 0,
-            initialZoom: initalZoom,
-            interactionOptions: const InteractionOptions(
-                flags: InteractiveFlag.all & ~InteractiveFlag.rotate),
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.app',
+      body: Stack(
+        children: [
+          FlutterMap(
+              mapController: mapController,
+              options: MapOptions(
+                initialCenter: initalPosition,
+                initialRotation: 0,
+                initialZoom: initalZoom,
+                interactionOptions: const InteractionOptions(
+                    flags: InteractiveFlag.all & ~InteractiveFlag.rotate),
+              ),
+              children: [
+                TileLayer(
+                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.app',
+                ),
+                CurrentLocationLayer(),
+                MarkerLayer(
+                  markers: _markers,
+                  alignment: Alignment.topCenter,
+                ),
+              ]),
+          // Address search field
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              margin: const EdgeInsets.all(15),
+              padding: const EdgeInsets.only(left: 12, right: 12),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              child: TextField(
+                controller: addressTextFieldController,
+                onSubmitted: _searchAddress,
+                decoration: const InputDecoration(
+                  hintText: 'Search address',
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+              ),
             ),
-            CurrentLocationLayer(),
-            MarkerLayer(
-              markers: _markers,
-              alignment: Alignment.topCenter,
-            ),
-          ]),
+          )
+        ],
+      ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -91,12 +122,7 @@ class _MapScreenState extends State<MapScreen> {
           ),
           const SizedBox(
             width: 10,
-            height: 10,
-          ),
-          FloatingActionButton(
-            onPressed: () => {},
-            heroTag: 'fab2',
-            child: const Icon(Icons.add),
+            height: 58,
           ),
         ],
       ),
@@ -165,5 +191,47 @@ class _MapScreenState extends State<MapScreen> {
     // When we reach here, permissions are granted and we can
     // continue accessing the position of the device.
     setState(() {});
+  }
+
+  Future<LatLng?> _getCoordinates(String address) async {
+    final response = await http.get(Uri.parse(
+        'https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q=$address'));
+
+    if (response.statusCode == 200) {
+      try {
+        final json = jsonDecode(response.body);
+        final lat = double.parse(json[0]['lat']);
+        final long = double.parse(json[0]['lon']);
+        return LatLng(lat, long);
+      } catch (e) {
+        print('Error: failed to get lat,lon from response');
+      }
+    } else {
+      throw Exception('Failed to get coordinates');
+    }
+
+    return null;
+  }
+
+  void _searchAddress(String? input) async {
+    if (input == null) return;
+
+    final coords = await _getCoordinates(input);
+    if (coords == null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Address not found')));
+      return;
+    }
+
+    final db = TourPlannerDatabase();
+    db.addWaypoint(Waypoint(
+        address: input,
+        city: '',
+        lat: coords.latitude,
+        long: coords.longitude));
+
+    loadMarkers();
+
+    addressTextFieldController.clear();
   }
 }
