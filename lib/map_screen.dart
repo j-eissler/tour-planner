@@ -166,10 +166,13 @@ class _MapScreenState extends State<MapScreen> {
         point: LatLng(wp.lat!, wp.long!),
         width: 40,
         height: 40,
-        child: const FittedBox(
-          child: Icon(
-            Icons.location_on,
-            color: Colors.red,
+        child: GestureDetector(
+          onTap: () => _showMarkerMenu(wp),
+          child: const FittedBox(
+            child: Icon(
+              Icons.location_on,
+              color: Colors.red,
+            ),
           ),
         ),
       );
@@ -266,5 +269,35 @@ class _MapScreenState extends State<MapScreen> {
   void _showSnackBar(String message) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _showMarkerMenu(Waypoint waypoint) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return SizedBox(
+            height: 200,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 22, bottom: 22),
+                  width: 40,
+                  child: const Divider(
+                    thickness: 5,
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.location_on),
+                  title: Text(waypoint.address),
+                ),
+                const Divider(),
+                const ListTile(
+                  leading: Icon(Icons.directions),
+                  title: Text('Go here'),
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
