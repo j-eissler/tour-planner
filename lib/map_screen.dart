@@ -8,6 +8,7 @@ import 'package:tour_planner/database.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:tour_planner/waypoint_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -291,9 +292,17 @@ class _MapScreenState extends State<MapScreen> {
                   title: Text(waypoint.address),
                 ),
                 const Divider(),
-                const ListTile(
-                  leading: Icon(Icons.directions),
-                  title: Text('Go here'),
+                ListTile(
+                  leading: const Icon(Icons.directions),
+                  title: const Text('Go here'),
+                  onTap: () async {
+                    final url = Uri.parse(
+                        'https://www.google.com/maps/search/?api=1&query=${waypoint.lat},${waypoint.long}');
+
+                    if (!await launchUrl(url)) {
+                      _showSnackBar('Could not start navigation');
+                    }
+                  },
                 ),
               ],
             ),
