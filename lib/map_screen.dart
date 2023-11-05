@@ -72,6 +72,8 @@ class _MapScreenState extends State<MapScreen> {
                 initialCenter: initalPosition,
                 initialRotation: 0,
                 initialZoom: initalZoom,
+                minZoom: 5,
+                maxZoom: 18,
                 interactionOptions: const InteractionOptions(
                     flags: InteractiveFlag.all & ~InteractiveFlag.rotate),
               ),
