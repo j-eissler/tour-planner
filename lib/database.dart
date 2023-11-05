@@ -53,6 +53,18 @@ class TourPlannerDatabase {
     return [];
   }
 
+  Future<Waypoint> getWaypoint(int id) async {
+    final db = await _getDb();
+    var result = await db.query('waypoints', where: 'id = ?', whereArgs: [id]);
+    return Waypoint(
+      id: result[0]['id'] as int,
+      address: result[0]['address'] as String,
+      city: result[0]['city'] as String,
+      lat: result[0]['lat'] as double?,
+      long: result[0]['long'] as double?,
+    );
+  }
+
   Future<int> deleteWaypoint(int? id) async {
     if(id == null) return 0;
 
