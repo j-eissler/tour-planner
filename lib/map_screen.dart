@@ -21,6 +21,7 @@ class _MapScreenState extends State<MapScreen> {
   final mapController = MapController();
   final initalPosition = const LatLng(50.775555, 6.083611);
   final initalZoom = 13.0;
+  var markerClickedZoom = 17.0;
   List<Marker> _markers = [];
 
   final addressTextFieldController = TextEditingController();
@@ -168,7 +169,13 @@ class _MapScreenState extends State<MapScreen> {
         width: 40,
         height: 40,
         child: GestureDetector(
-          onTap: () => _showMarkerMenu(wp),
+          onTap: () {
+            _showMarkerMenu(wp);
+
+            if (wp.lat != null && wp.long != null) {
+              mapController.move(LatLng(wp.lat!, wp.long!), markerClickedZoom);
+            }
+          },
           child: const FittedBox(
             child: Icon(
               Icons.location_on,
