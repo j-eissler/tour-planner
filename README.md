@@ -1,6 +1,5 @@
 # Tour Planner
-
-![Screenshot showing the overview map](images/map_screen.png)
+<img src="images/map_screen.png" width="200" alt="Screenshot showing the overview map">
 
 This app is developed to help me in my part-time job as a courier. It assists the user in finding a short route to all delivery addresses. It allows the user to enter many addresses which are then displayed on an overview map. 
 
