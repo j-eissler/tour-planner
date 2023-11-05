@@ -286,7 +286,7 @@ class _MapScreenState extends State<MapScreen> {
         context: context,
         builder: (context) {
           return SizedBox(
-            height: 200,
+            height: 250,
             child: Column(
               children: [
                 Container(
@@ -311,6 +311,34 @@ class _MapScreenState extends State<MapScreen> {
                     if (!await launchUrl(url)) {
                       _showSnackBar('Could not start navigation');
                     }
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete),
+                  title: const Text('Delete'),
+                  onTap: () async {
+                    final db = TourPlannerDatabase();
+
+                    db.deleteWaypoint(waypoint.id);
+
+                    // Close waypoint menu
+                    Navigator.of(context).pop();
+
+                    loadMarkers();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: const Text('Waypoint deleted'),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          onPressed: () {
+                            db.addWaypoint(
+                                waypoint); // Add waypoint back into database
+                            loadMarkers();
+                          },
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],
