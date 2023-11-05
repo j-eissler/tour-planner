@@ -21,6 +21,7 @@ class _MapScreenState extends State<MapScreen> {
   final mapController = MapController();
   final initalPosition = const LatLng(50.775555, 6.083611);
   final initalZoom = 13.0;
+  var markerAddedZoom = 17.0;
   var markerClickedZoom = 17.0;
   List<Marker> _markers = [];
 
@@ -273,7 +274,7 @@ class _MapScreenState extends State<MapScreen> {
 
     _showSnackBar('Waypoint added');
 
-    mapController.move(coords, initalZoom);
+    mapController.move(coords, markerAddedZoom);
   }
 
   void _showSnackBar(String message) {
