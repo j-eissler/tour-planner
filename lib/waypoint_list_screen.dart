@@ -39,13 +39,6 @@ class _WaypointsListScreenState extends State<WaypointsListScreen> {
               ),
             );
           }),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () async {
-          await Navigator.pushNamed(context, '/waypoint_form');
-          loadWaypoints();
-        },
-      ),
     );
   }
 
